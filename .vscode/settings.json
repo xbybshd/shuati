@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "queue": "cpp",
+        "functional": "cpp",
+        "unordered_map": "cpp"
+    }
+}
