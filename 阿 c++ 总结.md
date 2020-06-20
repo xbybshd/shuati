@@ -18,3 +18,21 @@
 ```
 
 　不同编译器的具体实现可以有所不同,但期望的结果是:按引用捕获的任何变量,lambda函数实际存储的应该是这些变量在创建这个lambda函数的函数的栈指针,而不是lambda函数本身栈变量的引用. 不管怎样, 因为大数lambda函数都很小且在局部作用中, 与候选的内联函数很类似, 所以按引用捕获的那些变量不需要额外的存储空间.
+
+
+### list的排序  
+对于无法顺序访问的容器，sort用的是list自己的排序l.sort,forward也是  
+forward list用的是push_front   
+
+### 关联性容器的find  
+set，map，multiset,multimap 出了泛用性的find外，自已有一个find，是基于二叉树查找，很快  
+
+map插入  map.insert(pair<int,int>(1,2));  此种方式如果key重复就插不进去   
+map\[1]=2  此种方式如果1重复会将2覆盖掉  
+mutlimap不可以用下标插入的方式   
+
+### static类成员函数
+
+由于static修饰的类成员属于类，不属于对象，因此static类成员函数是没有this指针的，this指针是指向本对象的指针。正因为没有this指针，所以static类成员函数
+
+不能访问非static的类成员，只能访问 static修饰的类成员。
