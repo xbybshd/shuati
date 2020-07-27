@@ -4,7 +4,7 @@
  * @Last Modified by: xbybshd
  * @Last Modified time: 2020-03-12 00:37:09
  */
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <queue>
 #include <map>
 
@@ -19,25 +19,29 @@ int ss2[MAX] = {0};
 int cal[MAX] = {0};
 int up[MAX] = {0};
 
-ifstream fcin(".\\input.txt",ifstream::in);
-ofstream fcout(".\\output.txt",ofstream::out);
+ifstream fcin(".\\input.txt", ifstream::in);
+ofstream fcout(".\\output.txt", ofstream::out);
 
-
-int max_t(int a,int b,int c){
+int max_t(int a, int b, int c)
+{
     int x = a > b ? a : b;
     int y = x > c ? x : c;
     return y;
 };
 map<int, int> num_pos;
 
-int find_bigger(int l,int r,int val){
+int find_bigger(int l, int r, int val)
+{
     int mid;
-    while(l<r){
+    while (l < r)
+    {
         mid = (l + r) >> 1;
-        if(up[mid]<=val){
+        if (up[mid] <= val)
+        {
             l = mid + 1;
         }
-        else{
+        else
+        {
             r = mid;
         }
     }
@@ -48,11 +52,13 @@ int main()
 {
 
     fcin >> n;
-    for (int i = 0; i < n;i++){
+    for (int i = 0; i < n; i++)
+    {
         fcin >> ss1[i];
         num_pos[ss1[i]] = i;
     }
-    for (int i = 0; i < n;i++){
+    for (int i = 0; i < n; i++)
+    {
         fcin >> ss2[i];
         cal[num_pos[ss2[i]]] = i;
     }
@@ -60,16 +66,46 @@ int main()
     int wi = 0;
     int ws = 0;
     up[0] = cal[0];
-    for (ui = 1; ui < n;ui++){
+    for (ui = 1; ui < n; ui++)
+    {
         int wi = find_bigger(0, ws + 1, cal[ui]);
-        if(wi>ws)
+        if (wi > ws)
             ws++;
         up[wi] = cal[ui];
     }
-    fcout << ws+1;
+    fcout << ws + 1;
 
     fcin.close();
     fcout.close();
 
-        return 0;
+    return 0;
+}
+
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 1000 + 10;
+int x[N], y[N], dp[N][N];
+
+int main()
+{
+    string a, b;
+    cin >> a >> b;
+    int lena = a.length(), lenb = b.length();
+
+    for (int i = 1; i <= lena; i++)
+    {
+        for (int j = 1; j <= lenb; j++)
+        {
+            if (a[i - 1] == b[j - 1])
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            else
+            {
+                dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+            }
+        }
+    }
+
+    cout << dp[lena][lenb] << endl;
+
+    return 0;
 }
