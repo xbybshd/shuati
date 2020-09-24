@@ -125,12 +125,59 @@ const类的对象会首先调用const版本的类函数，正常的会调用正�
 
 
 
-# static dynamic  
+### static dynamic  
 static 可以隐式类型转换，转换void指针，不能转其他类型指针，可以无限制转换基类子类，不需要多态
 dynamic 转换基类子类必须要多态
 
 
-## &&引用  
+### &&引用  
 对右值引用使用std::move，对通用引用使用std::forward
 右值引用：Weight&& ，类型确定，
 通用引用：typename &&，可能会被推导成左值
+
+### typedef typename 是什么？
+#### 举例  
+vector::size_type  
+明白上述语法，首先要先看清vector::size_type的意思。参考《STL源码剖析》不难发现，其实
+```cpp
+template <class T,class Alloc=alloc>
+class vector{
+public:
+    //...
+    typedef size_t size_type;
+    //...
+};
+```  
+这样就看得很清晰了，vector::size_type是vector的嵌套类型定义，其实际等价于 size_t类型。
+也就是说：  
+```cpp
+vector<int>::size_type ssize;
+//就等价于
+size_t ssize;
+```
+#### 为什么使用typename关键字
+那么问题来了，为什么要加上typename关键字？  
+```cpp
+typedef std::vector<T>::size_type size_type;//why not?
+```
+实际上，模板类型在实例化之前，编译器并不知道vector<T>::size_type是什么东西，事实上一共有三种可能：  
+```cpp
+静态数据成员
+静态成员函数
+嵌套类型
+```  
+那么此时typename的作用就在此时体现出来了——定义就不再模棱两可。 
+#### 总结
+所以根据上述两条分析，
+```cpp
+typedef typename std::vector<T>::size_type size_type;
+```  
+语句的真是面目是：
+typedef创建了存在类型的别名，而typename告诉编译器std::vector<T>::size_type是一个类型而不是一个成员。
+
+### memcpy和memmove  
+memmove()和memcpy()函数的区别和联系：  
+    相同点：两个都是内存拷贝，对所有类型都适用；  
+    不同点：  
+        ①.memcpy()函数是从前往后拷贝；假如出现内存重叠的现象；拷贝结果可能出错；  
+        ②.memmove()函数在memcpy()函数的基础上加入了对内存重叠拷贝的处理；引入了倒序拷贝的方式处理内存重叠的
