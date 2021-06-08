@@ -1,0 +1,24 @@
+{
+    "files.associations": {
+        "xstring": "cpp",
+        "stdexcept": "cpp",
+        "vector": "cpp",
+        "deque": "cpp",
+        "iosfwd": "cpp",
+        "xutility": "cpp",
+        "xiosbase": "cpp",
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "ostream": "cpp",
+        "iomanip": "cpp",
+        "limits": "cpp",
+        "cstdlib": "cpp",
+        "set": "cpp",
+        "xtree": "cpp",
+        "queue": "cpp",
+        "map": "cpp",
+        "utility": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled",
+    "cmake.configureOnOpen": false
+}
