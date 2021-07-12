@@ -25,10 +25,10 @@ public:
     int num_size;
     int mem_size;
     Elem& get(int i, int j) {//直接返回矩阵引用可以做到下标操作的效果
-        return mat[i * row + j];
+        return mat[i * cow + j];
     }
     void set(int i, int j, Elem v) {
-        mat[i * row + j] = v;
+        mat[i * cow + j] = v;
     }
     Matrix(int r, int c) {
         row = r;
