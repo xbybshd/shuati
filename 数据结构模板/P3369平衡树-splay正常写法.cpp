@@ -36,7 +36,7 @@ public:
     };
     node tree[MAX];
     int cnt, points;
-#define root tree[0].ch[1]
+    int root = 0;
 
     void update(int x) {
         tree[x].sum = tree[tree[x].ch[0]].sum + tree[tree[x].ch[1]].sum + tree[x].recv;
@@ -51,7 +51,7 @@ public:
         tree[father].ch[son] = x;
     }
 
-    void rotate(int x) { //旋转一个节点
+    void rotate(int x) { //旋转一个节点，这种写法就不会区分是左旋还是右旋
         int y = tree[x].f;
         int z = tree[y].f;
         int y_son = identify(x);
@@ -64,7 +64,7 @@ public:
         update(x);
     }
 
-    int newnode(int v, int f) { //这个是纯粹的在
+    int newnode(int v, int f) {
         cnt++;
         tree[cnt].val = v;
         tree[cnt].f = f;
@@ -72,11 +72,10 @@ public:
         return cnt;
     }
 
-    void splay_ro(int x, int to) { //将x旋转到原来to的位置，具体来说，就是找到to的父亲，然后把x旋转到对应的to的子节点
-        int to_f = tree[to].f;
-        while (tree[x].f != to_f) {
+    void splay_ro(int x, int to) { //这种写法是将x旋转到to的子节点，即to之下，这种形式需要编号为0的节点作为超级节点
+        while (tree[x].f != to) {
             int up_x = tree[x].f;
-            if (tree[up_x].f == to_f)
+            if (tree[up_x].f == to) //当x父亲的父亲是to的时候，因为只要旋转一次
                 rotate(x);
             else if (identify(x) == identify(up_x)) { //x与自己父节点共线，则先旋转父节点，再转x，这样存在两次共线的时候，深度会减1
                 rotate(up_x); //spaly 双旋
@@ -87,6 +86,9 @@ public:
                 rotate(x);
             }
         }
+        if (to == 0) { //旋转的目的节点父亲是超级节点，那么超级节点之下就是root
+            root = x;
+        }
     }
 
     void destory(int x) {
@@ -94,8 +96,8 @@ public:
         tree[x].val = -INF;
         if (x == cnt)
             cnt--;
-        if (points == 0)
-            cnt = 0;
+        // if (points == 0)
+        //     cnt = 0;
     }
 
     int getroot() {
@@ -106,7 +108,7 @@ public:
         int now = root;
         while (1) {
             if (tree[now].val == v) {
-                splay_ro(now, root);
+                splay_ro(now, 0);
                 return now;
             }
             int next = tree[now].val < v ? 1 : 0;
@@ -116,11 +118,13 @@ public:
         }
     }
 
-    int build(int v) {
+    int build(int v) { // v代表要插入节点的权值，
         points++;
-        if (cnt == 0) {
+        if (root == 0) { //只有根节点为0时，代表除了最初节点之外，所有的节点都没了。有两种情况，\
+        1，最开始的时候，2，删除操作把所有的节点都删除时
             root = 1;
-            return newnode(v, 0);
+            tree[0].ch[0] = newnode(v, 0);
+            return cnt;
         }
         else {
             int now = root;
@@ -143,7 +147,7 @@ public:
 
     void push(int v) {
         int add = build(v);
-        splay_ro(add, root);
+        splay_ro(add, 0);
     }
 
     void pop(int v) {
@@ -165,10 +169,11 @@ public:
             int lef = tree[del].ch[0];
             while (tree[lef].ch[1])
                 lef = tree[lef].ch[1];
-            splay_ro(lef, tree[del].ch[0]);
+            splay_ro(lef, del);
             int rig = tree[del].ch[1];
             connect(rig, lef, 1);
             connect(lef, 0, 1);
+            root = lef;
             update(lef);
         }
         destory(del);
@@ -192,14 +197,14 @@ public:
             }
         }
         if (now)
-            splay_ro(now, root);
+            splay_ro(now, 0);
         return ans;
     }
 
     int acrank(int r) {
         int now = root;
-        if (r > points)
-            return -INF;
+        // if (r > points)
+        //     return -INF;
         while (1) {
             int minus = tree[now].sum - tree[tree[now].ch[1]].sum;
             if (r > tree[tree[now].ch[0]].sum && r <= minus)
@@ -212,7 +217,7 @@ public:
                 now = tree[now].ch[1];
             }
         }
-        splay_ro(now, root);
+        splay_ro(now, 0);
         return tree[now].val;
     }
 
@@ -249,7 +254,6 @@ public:
         }
         return ans;
     }
-#undef root
 };
 
 splay st;
@@ -257,12 +261,12 @@ splay st;
 int main() {
     fcin >> m;
     int qq = m;
+    int i = 2;
     while (m--) {
         int op, u;
         fcin >> op >> u;
-        int rr = qq - m;
-        if (op != 1 && op != 2)
-            fcout << (qq - m) << "  ";
+        cout << i << " " << op << " " << u << "\n";
+        i++;
         if (op == 1) {
             st.push(u);
         }
