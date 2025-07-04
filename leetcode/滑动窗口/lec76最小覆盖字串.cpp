@@ -24,7 +24,7 @@ public:
                     ans_left = left;
                 }
                 char cl = s[left];
-                if (cnt[cl] == 0) { //说明left字母如果去除，那么窗口将不在完全包含cl
+                if (cnt[cl] == 0) { // 说明left字母如果去除，那么窗口将不在完全包含cl
                     less++;
                 }
                 cnt[cl]++;
@@ -35,6 +35,46 @@ public:
             return "";
         else {
             return s.substr(ans_left, ans + 1);
+        }
+    }
+};
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int l = 0, r = 0, al = -1, ar = s.size(), ans = 0, less = 0;
+        int cnt[128] = { 0 };
+        for (char& ti : t) {
+            if (cnt[ti] == 0) {
+                less++;
+            }
+            cnt[ti]++;
+        }
+        for (; r < s.length(); r++) {
+            char c = s[r];
+            cnt[c]--;
+            if (cnt[c] == 0) {
+                less--;
+            }
+            while (less == 0) {
+                if (r - l < ar - al) {
+                    ans = r - l;
+                    ar = r;
+                    al = l;
+                }
+                char cl = s[l];
+                if (cnt[cl] == 0) {
+                    less++;
+                }
+                cnt[cl]++;
+                l++;
+            }
+        }
+        if (al == -1) {
+            return "";
+        }
+        else {
+            return s.substr(al, ans + 1);
         }
     }
 };

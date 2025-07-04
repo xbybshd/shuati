@@ -1,0 +1,199 @@
+# 标准答案速记  
+## 排序 
+- lec192 排序模板
+  - 快排 用快排2,除了while移动是不等号，其他都是等号，划分是(l,p-1),(p,r)
+  - 堆排 pop，push，top
+    - push的while两个条件，一个下限cnt，一个大于。
+    - pop一个条件，上限等于cnt，先判断left上限和left取小的，然后再判断i和left，交换，最后break
+  - 归并 
+    - 用全闭区间，开头判断l>=r,之后求中，递归，[l,mid],[mid+1,r]
+    - ijk正常归并，最后单独归并
+    - 最后copy，先tmp范围，再nums  
+- LCR159 topk
+  - 快排划分 用快排2划分，划分函数不变，quick_sort函数用三分判断，区间不变，只有p等于k时返回
+- lec56合并区间 
+  - 原二维数组sort，遍历，ans不空且ans back[1]>=intval[i][0],重新比大小，否则ans push
+- lec75颜色分类 
+  - l管0，r管2，遍历i管1
+  - 遍历，先while判断上i<r,i=2,换掉，然后r--，再if判断i=0，跟l换，l++ 
+- lec179最大数
+  - 字符串sort cmp A+B>B+A，
+- lec295数据流中位数
+  - 左堆为大根堆，右堆为小根堆，要加great
+  - 左为空且数小于左top入左
+    - 如果左>右+1,右push左top，左pop
+  - 否则入右
+    - 如果右>左，左push右top，左pop
+  - 核心思想是左边始终保持与右边大于1或者平齐，数据根据与左top比较大小决定是入左还是右
+## 模拟  
+- LRU
+  - Node: k,v,prev,next
+  - LRU: *dummy,cap,hash
+    - remove,push_front,get_node,get_node查不到返回空指针，查到了调整node移动到前面
+    - get，直接get_inode，空指针返回-1
+    - put，先get_node查到了改value，没查到先new在hash上，之后如果hash大于cap，dummy得到尾节点指针，hash和dummy全romove，最后delete  
+
+## 链表  
+- lec206反转链表
+  - pre=null,cur=head,while(cur) temp=cur->next,cur->next=pre,pre=cur,cur=temp;  熟记
+- lec25k个一组翻转链表 
+  - 先for遍历得到总节点数
+  - *p0 = dummy,pre = nullptr,cur=head
+  - 外层每次把n-k，减到n>=k为止
+  - 内层是标准kfor循环，翻转链表
+  - 收尾部分
+    - 改的是3个，p0,p0->next,p0->next->next;
+    - p0->next->next  当前翻转之前的头节点，又是当前翻转之后的尾节点，它的next指向下一轮翻转之前的头节点
+    - p0->next指向当前翻转之前的尾节点，也就翻转之后的头节点
+    - p0本身指向翻转之后的尾节点
+    - p0 代表的是当前翻转前头节点的哨兵 
+- lec19删除链表倒数k个节点 
+  - 倒数k是从1开始数
+  - 先for循环从1开始，p=p->next
+  - pre此时是前驱节点 while(p->next!=nullptr)代表p走到最后一个节点，此时pre走到倒数k节点前一个，因为pre是head前驱，所以删除即可
+- lec21合并两个有序链表
+  - cur，list1，list2三指针 最后处理结尾序列  
+- lec24两两交换链表节点 
+  - pre=dummy，
+  - while(cur,cur->next)  next1 = cur->next,next2=next1->next; 之后开始从cur->next轮换，最后更新cur，pre
+- lec23合并k升序链表
+  - 仿函数小根堆
+  - dummy，先遍历，每个链表塞一遍，在while堆不空，取堆顶连接，如果下一个节点不空，就进堆  
+- lec82 删除链表全部重复元素 
+  - while(!cur)
+    - cur->next! && cur->val==cur->next->val      repeat++
+    - repeat && (cur->next==null || cur->val!=cur->next->val)   repeat=0,pre->next=cur->next
+    - cur=pre
+    - cur=cur->next
+- lec92 指定范围反转链表  
+  - 从pre开始遍历到l之前一个节点，for范围l-1，此时pre是范围前一个，cur是第一个
+  - [0,r-l+1]第二个for循环，cur在范围后第一个
+  - 范围前第一个之前赋值给p0，p0->next->next = cur,p0->next=pre
+- lec141 链表判环  
+  - 注意p0!=nullptr和p0->next!=nullptr的检测
+- lec143 重排链表 
+  - 判中函数，翻转函数，head和中cur交替next即可
+- lec148 链表排序
+  - 获取长度 getlen，长度切片splitlen(head,size)for i-1，返回下一个头节点
+  - 合并链表mergelist，返回合并后头尾，一般的归并
+  - 主函数，线获取长度，再for(int step=1;step<len;step*=2),内部构造dummy，dummy.next=head=cur
+    - 然后cur从前往后，每次切2个step大小，进行合并，切之前保留下一个头节点，给cur，然后newhead每次更新
+- lec287 寻找重复数  
+  - 类似静态链表的做法，也是找环入口，s=nums[s]
+- lec160 相交链表
+  - 两个链表头指针分别遍历，到了终点互换，相等即节点
+- lec238 奇偶链表 
+  - cur1=head，cur2=head->next，while(cur2&&cur2->next)  cur1，2交替即可，最后cur1指向开始保存的cur2
+- lec445 两数相加
+  - 两边链表翻转，再链表相加，构建新链表，最后再翻转新链表
+- lec61 旋转链表 
+  - 先大量判空，然后走到最底部，在接上头节点，走n-k%n步，下一个就是头节点切断返回即可
+## 滑动窗口  
+- lec3 无重复最长子串  
+  - 滑动窗口 i j，map记录最新的j位置，如果新的j在map里面找到了，那就说明之前有重复的，就把i跟j的+1取最大值。之后都要更新map，ans取j-i+1
+- lec76 最小覆盖子串  
+  - cnt[128]包含所有字母类型和次数，less在第一次遇到字母++，是所有字母类型数量
+  - 将段字符串遍历
+- lec200 长度最小的子数组  
+  - 先遍历j，加j到sum，再while sum-n[j]>= target，目的是让i卡在刚好包括i就大于sum，而不包括就小于sum，之后当sum依然大于target的时候更新大难
+  - ans一开始需要是在数组长度n+1上，在范围之外
+- lec239 滑动窗口最大值  
+  - 几个while都是要队列判空的
+  - 先while按照窗口范围出左边
+  - 再while进行单调减队列判空
+  - 最后pushi
+  - 大于k-1的时候，填入front
+- lec438 字符串所有字母异位词  
+  - 本质是求一样长度的连续词，字母集合一样，cnt[26], left,先用map得到各个字母数量，然后遍历，右边入字母，集合减，然后如果当前字母数小于0，left前进,直到当前字母数不小于0，如果i-left长度=p，那么说明找到了
+  - 集合在遍历里面是代表窗口内，还剩多少字母数量没有进入，没有达到给定字母的数量  
+  - 目标字符串s遍历，每次减少对应字母cnt，如果某字母cnt==0，减少less，说明有一个种类已经满足了
+    - while(less==0)说明满足答案，左右已经覆盖了全部子串，先进行最小长度更新
+      - 在left右移，如果left_c的cnt==0，那么less++，说明有种类移出了字符串
+  - 最后范围最小长度的left，ans子串
+- lec567 字符串排列  
+  - cnt[26],此题有要求的是刚好排列，就是字符串数量也一样，所以不需要用种类标记less，只用cnt[26]就行
+  - 先记录cnt[26],然后r遍历，对l进行while(cnt[s2[r]]<0)，进入while说明r当前的字母数量已经超过了目标排列，所以需要右移l，直到cnt[s2[r]]==0
+  - 完成while之后判断长度是否与s2对齐
+
+## 树 
+- 后序遍历
+  - 框架，p=root，pre=nullptr;
+    - while(p!=nullptr||!sp.empty())
+      - while(p){sp.push(p);p=p->next}  这两个while必须
+      - p=sp.top
+      - if(p->right==nullptr||p->right==pre){vec.push(p);sp.pop();pre=p;p=nullptr;}
+      - else{p=p->right}
+## dp 
+- lec887 扔鸡蛋  
+  - dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j] + 1;  i:扔的机会，[1,n];k:鸡蛋数量;数值:i次机会,j个鸡蛋，确定的最大楼层数
+  - 解释:
+    - 假设我们从某一层扔鸡蛋碎了，那么状态会转移到(i-1,j-1),但是这一层不能乱选，如果恰好选在dp[i-1][j-1]+2层，这种可以从(i-1,j-1)推理，它可以确定最高p层，那么一定是知道p不碎，p+1碎，再往上就不知道了，它不确定的情况是p不碎，p+1也不碎，此时机会或者鸡蛋用尽
+    - 如果我们在p+2扔碎了，那么就可以立刻确定p+1，所以确定了dp[i-1][j-1]+1,在其他地方扔，没有这种效果，在p内部相当于浪费机会，在p+2之上依然无法确定
+    - 如果在p+2没碎，说明f更高，此时状态是(i-1,k)但是这种情况可以把p+2看出0层，f一定大于0，对于这种情况一定可以缺人p+1+dp[i-1][k]层，因为这个之是看相对层高，而不是绝对  
+- lec198 打家劫舍合集 
+  - 1.纯线性， int temp = std::max(dp0 + nums[i], dp1);
+  - 2.1作为函数，设置左右，然后std::max(nums[0] + roblinear(2, n - 1, nums), roblinear(1, n, nums));
+  - 3.树形dp，每个节点返回抢劫当前，不抢劫当前，抢劫当前，那么左右就是不抢劫，不抢劫那么左右就是取左右最大
+  - 4.给定最小抢劫次数k和最大单次抢劫数值mx，采用二分，mx越小，k必然会降低，算得上次数，如果不抢f不动，抢f类似迭代
+- lec121 股票问题集合  
+  - 买卖次数决定了0次持有状态数组，是否可以用上一次非持有转移而来，如果只能买一次，那么持有数组只能是-prices[0]
+  - 如果可以买k次，那就需要k个状态
+  - 买2次的状态转移
+    - 起始:0次持有 -prices[i]->0次卖出非持有dp[i-1][0][1]+prices[i]->1次持有dp[i-1][0][0]-prices[i]->1次非持有dp[i-1][1][1]+prices[i];
+  - 无限次买，手续费，再每次prices后-fee
+  - 无限次买冷冻期 第0次第一次与无限次买一样，之后的持有状态从i-2的非持有状态购买
+  - 买k次，买2次的拓展，数组变为dp[n][k][2],第一次所有持有=-price，之后每次第一次持有是-price[0],之后是从k-1非持有转移而来
+- lec152 最大乘积子数组
+  - 保存到目前为止，最大整数maxf，最大负数maxn
+  - 每次遍历，先保存一下maxf,maxn
+  - maxf = std::max(mx*nums[i],std::max((long)nums[i],mn*nums[i]));
+  - minf = std::min(mn*nums[i],std::min((long)nums[i],mx*nums[i]));
+  - ans = std::max(ans,maxf);
+- lec32 最长有效括号  
+  - 从1开始，只有遇到')'进入循环
+    - 如果i-1='(',判断i>1 ，(i > 1 ? dp[i - 2] : 0) + 2
+    - 如果dp[i-1]>0
+      - 如果i - dp[i - 1] - 1 >= 0 && s[i - dp[i - 1] - 1] == '('   越过dp[i-1]在范围内，且越过之后是'(';
+        - dp[i] = dp[i - 1] + 2;
+        - 如果i - dp[i - 1] - 2 >= 0 越过之后再越过依然在范围内，那就加上dp[i - dp[i - 1] - 2]
+- lec53 最大子数组和
+  - nums[i] = std::max(nums[i],nums[i]+nums[i-1]);
+  - 如果当前num加上前一个num都没有当前num大，那就放弃前面的
+- lec55 跳跃游戏  
+  - if (i > mx) {
+        return false;
+    } // 每次记录自己可以到达的最大位置
+    mx = std::max(mx, i + nums[i]);
+  - 求最短跳跃次数，有cur_step，next_step，每次慢慢走向cur_step，过程中按照最大更新next_step，到了cur_step头的时候，cur_step=next_step，步数+1
+### 背包  
+- 完全平方数  背包求方案
+  - 先计算每个平方数，作为背包元素，再两层循环，外层背包，内层容量，从前往后，每层求最小，从前一个j-cost转移到
+- 零钱兑换
+  - 1:完全背包，数组全部最大化，dp[0]=0，外层硬币，内层容量
+  - 2:完全背包方案数量，数组dp[j]=dp[j]+dp[j-cost]上一层硬币方案书+一个当前硬币，就可以凑到当前j，本来上一次不动就可以凑到当前j  
+- lec139 单词拆分
+  - 凑出来即可，一个set，里面所有子单词，统计出max_len，然后str从前往后遍历，每次遍历向后试探最大的max_len为j，提取子串，再set中寻找，找到且
+    dp[j]=1,那i就是1，当前退出，最后看dp[n]
+- lec416 分割等和子集 
+  - 先求和，然后取一般，外层硬币，内存j从后往前遍历，如果dp[sum]是1，那就返回true
+### xx子序列  
+- lec300最长递增子序列  
+  - 维护一个数组，每次lower_bound查第一个大于等于当前元素的位置，如果在最后就push_back，否则替换，数组长度就是答案  
+## 贪心  
+- lec763 划分字母区间  
+  - 每一段的字母只能在当前段内，求可以划分为几段
+  - cnt[26]记录每个字母最右边位置
+  - 遍历，end为当前段预设最右边，每次end = std::max(cnt[s[i]-'a'],end);
+  - 如果当前位置刚好是end，那就切割，原因是之前的所有字母最右边在end范围内，满足要求
+## 双指针  
+- lec15三数之和 
+  - 先排序
+  - k=i+1,j=n-1;while(k<j)
+  - i去重continue,k,j去重，>0 j--,<0 k++,else ans.push_back,k++,j--;
+- lec11 盛水最多的容器 
+  - 谁小动谁
+## 二分  
+- lec33 搜索旋转排序数组   这里都是用<=,>=
+  - 开始有三分 nums[mid]==target
+  - nums[l]<=nums[mid]  traget在中间或者不是，l和r都是+1-1
+  - else

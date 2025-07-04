@@ -8,7 +8,6 @@ public:
         }
         std::vector<int> ans;
         int end = 0, start = 0;
-        ;
         for (int i = 0; i < n; i++) {
             end = std::max(cnt[s[i] - 'a'], end);
             if (end == i) {

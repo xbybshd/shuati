@@ -23,6 +23,19 @@ public:
 class Solution {
 public:
     int rob(vector<int>& nums) {
+        int dp0 = 0, dp1 = 0, n = nums.size();
+        for (int i = 0; i < n; i++) {
+            int temp = std::max(dp0 + nums[i], dp1);
+            dp0 = dp1;
+            dp1 = temp;
+        }
+        return dp1;
+    }
+};
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
         int f0 = 0, f1 = 0;
         for (int x : nums) {
             int new_f = max(f1, f0 + x);
@@ -80,5 +93,40 @@ public:
     int rob(TreeNode* root) {
         auto [rob, no_rob] = dfs(root);
         return std::max(rob, no_rob);
+    }
+};
+
+// 打家劫舍4dp二分，保证偷k家的情况下，最大的偷取某一家nums[i]最小，理论上来说，mx越大，k越大
+// mx越小k越小，所以对mx二分，判断条件是偷取次数f1对k的大小
+// 如果当前大于mx，
+class Solution {
+public:
+    int rob(int k, int mx, std::vector<int>& nums) {
+        int f0 = 0, f1 = 0, n = nums.size();
+        for (int i = 0; i < n; i++) {
+            int x = nums[i];
+            if (x > mx) {
+                f0 = f1; // f1不变，不需要动了
+            }
+            else {
+                int temp = f1;
+                f1 = std::max(f0 + 1, f1);
+                f0 = temp;
+            }
+        }
+        return f1 >= k;
+    }
+    int minCapability(vector<int>& nums, int k) {
+        int l = 0, r = *max_element(nums.begin(), nums.end());
+        while (l < r) {
+            int mid = (l + r) >> 1;
+            if (rob(k, mid, nums)) {
+                r = mid;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        return r;
     }
 };

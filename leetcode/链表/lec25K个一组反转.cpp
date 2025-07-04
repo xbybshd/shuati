@@ -38,6 +38,10 @@ public:
             }
 
             // 见视频
+            // 改的是3个，p0,p0->next,p0->next->next;
+            // p0->next->next  当前翻转之前的头节点，又是当前翻转之后的尾节点，它的next指向下一轮翻转之前的头节点
+            // p0->next指向当前翻转之前的尾节点，也就翻转之后的头节点
+            // p0本身指向翻转之后的尾节点
             ListNode* nxt = p0->next;
             p0->next->next = cur;
             p0->next = pre;
@@ -64,22 +68,22 @@ struct ListNode {
 std::pair<ListNode*, ListNode*> reverseK(ListNode* now, int k) {
     ListNode* last = now;
     for (int i = 0; i < k - 1; i++) { // 提前探明当前组是否足够k，迭代范围是k-1
-        if (!last->next) { //不够就直接返回当前组开头，此时结尾是正常最后一个
+        if (!last->next) { // 不够就直接返回当前组开头，此时结尾是正常最后一个
             return std::pair<ListNode*, ListNode*>(now, last);
         }
         last = last->next;
     }
     ListNode* head = now;
-    ListNode* p = now->next; //正常反转流程，保留下一个
+    ListNode* p = now->next; // 正常反转流程，保留下一个
     ListNode* np;
     for (int i = 0; i < k - 1; i++) {
-        np = p->next; //三指针迭代
+        np = p->next; // 三指针迭代
         p->next = now;
         now = p;
         p = np;
     }
-    head->next = np; //将反转前的开头即反转后的结尾下一个指向下一组开头np，这里的返回在外面更新需要
-    return std::pair<ListNode*, ListNode*>(now, head); //此时now也就是反转后的开头了，head不变是原开头
+    head->next = np; // 将反转前的开头即反转后的结尾下一个指向下一组开头np，这里的返回在外面更新需要
+    return std::pair<ListNode*, ListNode*>(now, head); // 此时now也就是反转后的开头了，head不变是原开头
 }
 
 ListNode* reverseKGroup(ListNode* head, int k) {
@@ -87,17 +91,17 @@ ListNode* reverseKGroup(ListNode* head, int k) {
         return head;
     }
     ListNode pre(0, head);
-    ListNode* group_end = &pre; //代表上一组的最后结尾，开头要用额外头节点
+    ListNode* group_end = &pre; // 代表上一组的最后结尾，开头要用额外头节点
     ListNode* ans = nullptr;
-    while (group_end->next) { //上一组的结尾默认是下一组没有反转的开头节点，如果为空就不需要继续了
+    while (group_end->next) { // 上一组的结尾默认是下一组没有反转的开头节点，如果为空就不需要继续了
         std::pair<ListNode*, ListNode*> group_range = reverseK(group_end->next, k);
-        if (!ans) { //返回第一个是反转后的真正头节点，第一次迭代返回的是最后答案
+        if (!ans) { // 返回第一个是反转后的真正头节点，第一次迭代返回的是最后答案
             ans = group_range.first;
         }
-        else { //上一组反转前的开头是上一组反转后的结尾，让上一组反转后的结尾指向这一组反转后的开头
+        else { // 上一组反转前的开头是上一组反转后的结尾，让上一组反转后的结尾指向这一组反转后的开头
             group_end->next = group_range.first;
         }
-        group_end = group_range.second; //更新这一组反转后的结尾
+        group_end = group_range.second; // 更新这一组反转后的结尾
     }
     return ans;
 }

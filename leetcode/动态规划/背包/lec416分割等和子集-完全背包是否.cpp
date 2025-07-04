@@ -21,3 +21,29 @@ public:
         return dp[n][sum];
     }
 };
+
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0, n = nums.size();
+        for (int& elem : nums) {
+            sum += elem;
+        }
+        if (sum % 2 != 0) {
+            return false;
+        }
+        sum /= 2;
+        std::vector<int> dp(sum + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i < nums.size(); i++) {
+            int cost = nums[i];
+            for (int j = sum; j >= cost; j--) {
+                dp[j] = std::max(dp[j - cost], dp[j]);
+            }
+            if (dp[sum] == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+};

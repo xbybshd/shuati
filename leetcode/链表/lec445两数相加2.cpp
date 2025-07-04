@@ -19,7 +19,6 @@ public:
             cur = temp;
         }
         return pre;
-        ;
     }
 
     ListNode* addList(ListNode* l1, ListNode* l2) {

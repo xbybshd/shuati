@@ -1,6 +1,8 @@
 // 快排关于比较条件是否带等于号会决定速度，带的话会慢，但是每次划分一定是正确的，最后的划分点的数值一定是开始选定的标记
 // 左边小于等于，右边大于等于。 但是如果不带等于号，最后划分点的数值不一定是标记，所以在递归的时候，要把划分点带上，这样就不是严格的三分
 
+// 以快排2作为标准写法
+
 // 快排3的写法，取mid的时候，是否+1，这里不管是直接取1/2还是随机，+1的话，就是返回j [l,j],[j+1,r], 不加1返回i,[l,i-1],[i,r]
 // 原理类似二分法的二分查找，(l+r)>>1配合[l,p]某些情况会陷入死循环，就是返回的p是区间右边界
 void qsort(vector<int>& nums, int beg, int end) {
@@ -109,7 +111,7 @@ void quick_sort(std::vector<int>& nums, int l, int r) {
     quick_sort(nums, p + 1, r); // 排序右半部分
 }
 
-//快排4 重复数字优化
+// 快排4 重复数字优化
 void partition(std::vector<int>& nums, int l, int r, int& i, int& j) {
     // int mid = (l + r) >> 1;
     int mid = rand() % (r - l + 1) + l;
